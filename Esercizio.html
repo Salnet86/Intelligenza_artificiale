@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Esercizio: Prodotto scalare tra immagini</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; line-height: 1.6; }
+  h1, h2 { color: #2c3e50; }
+  pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+  table { border-collapse: collapse; margin-top: 10px; }
+  td, th { border: 1px solid #ddd; padding: 8px; text-align: center; }
+  .highlight { background-color: #dff0d8; }
+</style>
+</head>
+<body>
+
+
+<h1>Esercizio: Prodotto scalare tra immagini</h1>
+
+
+<h2>Dati</h2>
+<p>Due immagini in scala di grigi rappresentate da matrici 3×3 (pixel da 0 a 255):</p>
+
+
+<table>
+  <tr>
+    <th>I<sub>1</sub></th>
+    <th>I<sub>2</sub></th>
+  </tr>
+  <tr>
+    <td>
+      <pre>
+100 &nbsp; 150 &nbsp; 200
+50 &nbsp;&nbsp; 100 &nbsp; 150
+0 &nbsp;&nbsp;&nbsp;&nbsp; 50 &nbsp;&nbsp; 100
+      </pre>
+    </td>
+    <td>
+      <pre>
+90 &nbsp;&nbsp; 160 &nbsp; 195
+55 &nbsp;&nbsp; 95 &nbsp;&nbsp; 140
+5 &nbsp;&nbsp;&nbsp;&nbsp; 45 &nbsp;&nbsp; 110
+      </pre>
+    </td>
+  </tr>
+</table>
+
+
+<h2>Passo 1: Trasformare le matrici in vettori</h2>
+<p>Appiattiamo la matrice riga per riga:</p>
+
+
+<pre>
+v<sub>1</sub> = [100, 150, 200, 50, 100, 150, 0, 50, 100]
+
+
+v<sub>2</sub> = [90, 160, 195, 55, 95, 140, 5, 45, 110]
+</pre>
+
+
+<h2>Passo 2: Calcolare il prodotto scalare</h2>
+<p>Calcoliamo la somma delle moltiplicazioni elemento per elemento:</p>
+
+
+<pre>
+v<sub>1</sub> · v<sub>2</sub> = Σ (v<sub>1i</sub> × v<sub>2i</sub>) =
+
+
+100×90 + 150×160 + 200×195 + 50×55 + 100×95 + 150×140 + 0×5 + 50×45 + 100×110
+</pre>
+
+
+<h2>Calcolo dettagliato:</h2>
+<table>
+  <tr><th>Operazione</th><th>Risultato</th></tr>
+  <tr><td>100 × 90</td><td class="highlight">9,000</td></tr>
+  <tr><td>150 × 160</td><td class="highlight">24,000</td></tr>
+  <tr><td>200 × 195</td><td class="highlight">39,000</td></tr>
+  <tr><td>50 × 55</td><td class="highlight">2,750</td></tr>
+  <tr><td>100 × 95</td><td class="highlight">9,500</td></tr>
+  <tr><td>150 × 140</td><td class="highlight">21,000</td></tr>
+  <tr><td>0 × 5</td><td class="highlight">0</td></tr>
+  <tr><td>50 × 45</td><td class="highlight">2,250</td></tr>
+  <tr><td>100 × 110</td><td class="highlight">11,000</td></tr>
+</table>
+
+
+<h2>Somma totale:</h2>
+<p><strong>118,500</strong></p>
+
+
+<h2>Conclusione</h2>
+<p>Il prodotto scalare è un numero che indica la <strong>somiglianza</strong> tra le due immagini. Più è alto, più le immagini sono simili (in termini di pixel corrispondenti).</p>
+
+
+</body>
+</html>
+

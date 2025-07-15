@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Perceptrone semplice - Calcolo z</title>
+</head>
+<body>
+<h1>Calcolo neurone perceptrone semplice</h1>
+
+<p>Immagine 2x2 pixel:</p>
+<table border="1" cellpadding="10">
+<tr><td>100</td><td>150</td></tr>
+<tr><td>200</td><td>50</td></tr>
+</table>
+
+<p>Pesi: [0.2, -0.1, 0.4, 0.3]</p>
+<p>Bias: -30</p>
+
+<button onclick="calcolaOutput()">Calcola output neurone</button>
+
+<h2 id="risultato"></h2>
+
+<script>
+function calcolaOutput() {
+const x = [100, 150, 200, 50]; // vettore input pixel
+const w = [0.2, -0.1, 0.4, 0.3]; // pesi
+const b = -30; // bias
+
+let z = 0;
+for (let i = 0; i < x.length; i++) {
+z += w[i] * x[i];
+}
+z += b;
+
+// funzione step
+const y = z >= 0 ? 1 : 0;
+
+// mostra risultato
+document.getElementById("risultato").innerText =
+`Somma pesata z = ${z.toFixed(2)}\nOutput (y) = ${y} (${y === 1 ? "gatto" : "cane"})`;
+}
+</script>
+
+</body>
+</html>

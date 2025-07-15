@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Similarità del Coseno - Tutorial Python</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 20px;
+background-color: #f4f4f4;
+}
+pre {
+background: #222;
+color: #0f0;
+padding: 15px;
+border-radius: 5px;
+overflow-x: auto;
+}
+h2 {
+color: #333;
+}
+code {
+background-color: #ddd;
+padding: 2px 4px;
+border-radius: 3px;
+}
+</style>
+</head>
+<body>
+
+<h1>📐 Calcolo della Similarità del Coseno in Python</h1>
+
+<p>In questo tutorial calcoleremo quanto due immagini (sotto forma di vettori) sono simili tra loro usando la <strong>similarità del coseno</strong>.</p>
+
+<h2>📘 Formula matematica</h2>
+
+<pre>
+similarità = (A · B) / (‖A‖ × ‖B‖)
+</pre>
+
+<p>
+Dove:<br>
+- <code>A · B</code> è il prodotto scalare<br>
+- <code>‖A‖</code> è la norma (lunghezza) del vettore A<br>
+- <code>‖B‖</code> è la norma (lunghezza) del vettore B
+</p>
+
+<h2>💻 Codice Python senza funzioni</h2>
+
+<pre>
+# Due vettori (immagini appiattite in forma di lista)
+A = [1, 2]
+B = [3, 4]
+
+# Calcolo del prodotto scalare A · B
+prodotto_scalare = 0
+for i in range(len(A)):
+prodotto_scalare += A[i] * B[i]
+
+# Calcolo della norma di A: √(a1² + a2² + ...)
+somma_quadrati_A = 0
+for i in range(len(A)):
+somma_quadrati_A += A[i] * A[i]
+norma_A = somma_quadrati_A ** 0.5
+
+# Calcolo della norma di B
+somma_quadrati_B = 0
+for i in range(len(B)):
+somma_quadrati_B += B[i] * B[i]
+norma_B = somma_quadrati_B ** 0.5
+
+# Calcolo della similarità del coseno
+similarita_coseno = prodotto_scalare / (norma_A * norma_B)
+
+# Output
+print("Prodotto scalare (A · B):", prodotto_scalare)
+print("Norma di A:", norma_A)
+print("Norma di B:", norma_B)
+print("Similarità del coseno:", similarita_coseno)
+</pre>
+
+<h2>📈 Esempio numerico</h2>
+
+<p>
+Per i vettori A = [1, 2] e B = [3, 4]:<br>
+- Prodotto scalare = 1×3 + 2×4 = 11<br>
+- Norma A = √(1² + 2²) = √5 ≈ 2.236<br>
+- Norma B = √(3² + 4²) = √25 = 5<br>
+- Similarità = 11 / (2.236 × 5) ≈ 0.983
+</p>
+
+<h2>✅ Risultato</h2>
+<p>La similarità del coseno è circa <strong>0.983</strong>: quindi i vettori sono molto simili!</p>
+
+<hr>
+
+<h3>🤖 Applicazione al riconoscimento immagini</h3>
+<p>
+Se trasformi due immagini in vettori (es. da 2×2 a [p1, p2, p3, p4]), puoi usare questa formula per dire quanto sono simili — anche se non sono pixel-per-pixel uguali!
+</p>
+
+<h3>📝 NOTE</h3>
+<ul>
+<li>Il confronto diretto con <code>A == B</code> funziona solo se i vettori sono identici.</li>
+<li>La similarità del coseno funziona anche se i valori sono proporzionali (es. luce diversa).</li>
+<li>Il valore sarà tra <code>0</code> (completamente diversi) e <code>1</code> (identici nella direzione).</li>
+</ul>
+
+</body>
+</html>
