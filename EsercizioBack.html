@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esempio completo di Backpropagation</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; background-color: #f9f9f9; }
+    h1, h2 { color: #333; }
+    code { background: #eee; padding: 2px 4px; border-radius: 4px; }
+    pre { background: #eee; padding: 10px; border-radius: 5px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>Esercizio completo di Backpropagation</h1>
+
+  <h2>📥 Input</h2>
+  <ul>
+    <li><strong>Input:</strong> x = 30 (temperatura)</li>
+    <li><strong>Target (y):</strong> un valore desiderato (es. 1)</li>
+  </ul>
+
+  <h2>🧠 Architettura</h2>
+  <ul>
+    <li>1 input (x)</li>
+    <li>Hidden Layer 1: 2 neuroni (H1, H2)</li>
+    <li>Output Layer: 1 neurone (O)</li>
+    <li>Pesi: w1, w2 → H1; w3, w4 → H2; w5, w6 → Output</li>
+    <li>Bias: b1 (per H1), b2 (per H2), b3 (per Output)</li>
+  </ul>
+
+  <h2>⚙️ Calcoli Forward</h2>
+  <pre>
+  z1 = w1 * x + w2 * x + b1
+  a1 = σ(z1) = 1 / (1 + e^(-z1))
+
+  z2 = w3 * x + w4 * x + b2
+  a2 = σ(z2) = 1 / (1 + e^(-z2))
+
+  z3 = w5 * a1 + w6 * a2 + b3
+  a3 = σ(z3) = output finale
+  </pre>
+
+  <h2>🧮 Funzione di Costo</h2>
+  <pre>
+  L = (a3 - y)^2
+  </pre>
+
+  <h2>🔁 Backpropagation</h2>
+  <h3>1. Output Layer Delta</h3>
+  <pre>
+  δo = (a3 - y) * σ'(z3)
+     = (a3 - y) * a3 * (1 - a3)
+  </pre>
+
+  <h3>2. Hidden Layer Delta</h3>
+  <pre>
+  δ1 = δo * w5 * σ'(z1) = δo * w5 * a1 * (1 - a1)
+  δ2 = δo * w6 * σ'(z2) = δo * w6 * a2 * (1 - a2)
+  </pre>
+
+  <h2>📦 Aggiornamento Pesi e Bias</h2>
+  <h3>Output Layer</h3>
+  <pre>
+  w5 = w5 - η * δo * a1
+  w6 = w6 - η * δo * a2
+  b3 = b3 - η * δo
+  </pre>
+
+  <h3>Hidden Layer</h3>
+  <pre>
+  w1 = w1 - η * δ1 * x
+  w2 = w2 - η * δ1 * x
+  w3 = w3 - η * δ2 * x
+  w4 = w4 - η * δ2 * x
+
+  b1 = b1 - η * δ1
+  b2 = b2 - η * δ2
+  </pre>
+
+  <h2>📘 Nota</h2>
+  <p>
+    - σ(z) è la sigmoide: <code>σ(z) = 1 / (1 + e<sup>-z</sup>)</code><br>
+    - σ'(z) è la derivata della sigmoide: <code>σ'(z) = σ(z)(1 - σ(z))</code><br>
+    - η è il learning rate (es. 0.01)
+  </p>
+
+</body>
+</html>

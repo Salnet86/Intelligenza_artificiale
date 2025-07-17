@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Formule di Base - Reti Neurali e Deep Learning</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 2em;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    code {
+      background: #eaeaea;
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+    }
+    .box {
+      background: white;
+      padding: 1em;
+      margin-bottom: 2em;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📘 Formule fondamentali delle Reti Neurali</h1>
+
+  <div class="box">
+    <h2>1. Attivazione del neurone</h2>
+    <p>
+      <strong>Formula:</strong><br>
+      <code>z = w · a + b</code><br>
+      <code>a = σ(z)</code><br><br>
+      Dove:<br>
+      - <code>w</code> = peso<br>
+      - <code>a</code> = attivazione in ingresso<br>
+      - <code>b</code> = bias<br>
+      - <code>σ(z)</code> = funzione sigmoide
+    </p>
+  </div>
+
+  <div class="box">
+    <h2>2. Funzione di costo (Loss)</h2>
+    <p>
+      <strong>Formula:</strong><br>
+      <code>L = (a_output - y)^2</code><br><br>
+      Dove <code>y</code> è il valore atteso (target).
+    </p>
+  </div>
+
+  <div class="box">
+    <h2>3. Derivata della sigmoide</h2>
+    <p>
+      <strong>Formula:</strong><br>
+      <code>σ'(z) = a · (1 - a)</code><br>
+      (dove <code>a = σ(z)</code>)
+    </p>
+  </div>
+
+  <div class="box">
+    <h2>4. Errore del neurone di output</h2>
+    <p>
+      <strong>Formula:</strong><br>
+      <code>δ_output = (a_output - y) · σ'(z_output)</code>
+    </p>
+  </div>
+
+  <div class="box">
+    <h2>5. Errore dei neuroni nascosti</h2>
+    <p>
+      <strong>Formula:</strong><br>
+      <code>δ_hidden = (w^T · δ_next) · σ'(z_hidden)</code><br>
+      Dove <code>w^T</code> sono i pesi verso il layer successivo.
+    </p>
+  </div>
+
+  <div class="box">
+    <h2>6. Aggiornamento dei pesi e bias</h2>
+    <p>
+      <strong>Formule:</strong><br>
+      <code>w = w - η · δ · a_prev</code><br>
+      <code>b = b - η · δ</code><br><br>
+      Dove <code>η</code> è il learning rate.
+    </p>
+  </div>
+
+  <div class="box">
+    <h2>🧠 Quando diventa Deep Learning?</h2>
+    <p>
+      Quando la rete ha 3 o più layer nascosti. Le formule restano le stesse, ma si applicano più volte!
+    </p>
+  </div>
+
+</body>
+</html>
