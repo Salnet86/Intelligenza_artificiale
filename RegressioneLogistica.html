@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<title>Esempio Regressione Logistica con One-Hot</title>
+<style>
+body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; line-height: 1.5; }
+h2 { color: #2c3e50; }
+table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
+th { background-color: #34495e; color: white; }
+.formula { background: #ecf0f1; padding: 10px; margin: 10px 0; border-radius: 6px; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<h2>1. Dataset di email</h2>
+<table>
+<thead>
+<tr>
+<th>Email ID</th>
+<th>Testo mail</th>
+<th>Classe (Spam=1, No spam=0)</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>offerta gratis clicca</td><td>1</td></tr>
+<tr><td>2</td><td>ciao come stai</td><td>0</td></tr>
+<tr><td>3</td><td>clicca ora offerta speciale</td><td>1</td></tr>
+</tbody>
+</table>
+
+<h2>2. Vocabolario</h2>
+<p>Parole uniche estratte da tutte le email:</p>
+<pre><code>offerta, gratis, clicca, ciao, come, stai, ora, speciale</code></pre>
+
+<table>
+<thead>
+<tr><th>Parola</th><th>Indice</th></tr>
+</thead>
+<tbody>
+<tr><td>offerta</td><td>0</td></tr>
+<tr><td>gratis</td><td>1</td></tr>
+<tr><td>clicca</td><td>2</td></tr>
+<tr><td>ciao</td><td>3</td></tr>
+<tr><td>come</td><td>4</td></tr>
+<tr><td>stai</td><td>5</td></tr>
+<tr><td>ora</td><td>6</td></tr>
+<tr><td>speciale</td><td>7</td></tr>
+</tbody>
+</table>
+
+<h2>3. One-Hot Encoding</h2>
+<table>
+<thead>
+<tr><th>Email ID</th><th>Vettore One-Hot</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>[1, 1, 1, 0, 0, 0, 0, 0]</td></tr>
+<tr><td>2</td><td>[0, 0, 0, 1, 1, 1, 0, 0]</td></tr>
+<tr><td>3</td><td>[1, 0, 1, 0, 0, 0, 1, 1]</td></tr>
+</tbody>
+</table>
+
+<h2>4. Pesi iniziali e bias</h2>
+<p>
+<strong>Pesi \( \mathbf{w} \):</strong> [0.8, 0.7, 0.9, -0.5, -0.4, -0.3, 0.6, 0.5]<br />
+<strong>Bias \( b \):</strong> -1.0
+</p>
+
+<h2>5. Calcolo regressione logistica</h2>
+
+<h3>Email 1</h3>
+<div class="formula">
+z = (0.8 × 1) + (0.7 × 1) + (0.9 × 1) + (-0.5 × 0) + (-0.4 × 0) + (-0.3 × 0) + (0.6 × 0) + (0.5 × 0) - 1.0 = 1.4
+</div>
+<div class="formula">
+σ(z) = 1 / (1 + e<sup>-1.4</sup>) ≈ 0.80
+</div>
+<p><strong>Probabilità spam:</strong> 80% → <em>prediciamo spam</em></p>
+
+<h3>Email 2</h3>
+<div class="formula">
+z = (0.8 × 0) + (0.7 × 0) + (0.9 × 0) + (-0.5 × 1) + (-0.4 × 1) + (-0.3 × 1) + (0.6 × 0) + (0.5 × 0) - 1.0 = -2.2
+</div>
+<div class="formula">
+σ(z) = 1 / (1 + e<sup>2.2</sup>) ≈ 0.10
+</div>
+<p><strong>Probabilità spam:</strong> 10% → <em>prediciamo no spam</em></p>
+
+<h3>Email 3</h3>
+<div class="formula">
+z = (0.8 × 1) + (0.7 × 0) + (0.9 × 1) + (-0.5 × 0) + (-0.4 × 0) + (-0.3 × 0) + (0.6 × 1) + (0.5 × 1) - 1.0 = 1.8
+</div>
+<div class="formula">
+σ(z) = 1 / (1 + e<sup>-1.8</sup>) ≈ 0.86
+</div>
+<p><strong>Probabilità spam:</strong> 86% → <em>prediciamo spam</em></p>
+
+<h2>Riassunto</h2>
+<table>
+<thead>
+<tr><th>Email</th><th>Classe reale</th><th>Probabilità spam</th><th>Predizione</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>1</td><td>80%</td><td>Spam</td></tr>
+<tr><td>2</td><td>0</td><td>10%</td><td>No spam</td></tr>
+<tr><td>3</td><td>1</td><td>86%</td><td>Spam</td></tr>
+</tbody>
+</table>
+
+</body>
+</html>
