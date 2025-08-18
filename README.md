@@ -1,48 +1,72 @@
-Applicazioni svolte in stage sulla intelligenza artificiale 
-con linguaggi JavaScript php python  
+# Intelligenza Artificiale
 
+Benvenuti nella repository **Intelligenza_artificiale**!  
+Questa raccolta contiene progetti personali e di formazione su Machine Learning, Deep Learning, NLP, classificazione immagini, sistemi di raccomandazione e riconoscimento facciale.
 
-machine learning
+---
 
+## 📂 Struttura dei progetti
 
-Applicazioni svolte in stage e percorsi formativi - Intelligenza Artificiale
-Durante il mio percorso formativo e le esperienze di stage, ho sviluppato diverse applicazioni basate sull’intelligenza artificiale, utilizzando linguaggi di programmazione come JavaScript, PHP e Python. In particolare, mi sono concentrato sull’ambito del Machine Learning, realizzando progetti pratici in collaborazione con i docenti.
+### 1. Chat AI
+- File principale: `Chat-AI.zip` (estrarre in una cartella `ChatAI/`)  
+- Descrizione: progetto di chat intelligente basata su AI.  
+- Tecnologie: Python, NLP, modelli pre-addestrati.  
+- Come usare:  
+  1. Estrarre il contenuto del `.zip`.  
+  2. Avviare lo script principale (es. `chat.py`).  
 
-💬 1. ChatAI - Assistente Virtuale con TensorFlow.js (JavaScript)
-Tecnologie utilizzate: JavaScript, TensorFlow.js, HTML/CSS
+---
 
-Descrizione: Sviluppo di un assistente virtuale in grado di comprendere input testuali e generare risposte automatiche.
+### 2. Classificazione Immagini
+- File principali: `ClassificazioneOneHote.py`  
+- Descrizione: classificazione di dataset tramite codifica one-hot.  
+- Tecnologie: Python, NumPy, scikit-learn.  
+- Come usare: eseguire lo script con Python (`python ClassificazioneOneHote.py`).
 
-Obiettivi: Addestrare un modello NLP (Natural Language Processing) direttamente nel browser usando TensorFlow.js.
+---
 
-Risultato: Un'applicazione web interattiva capace di rispondere a domande base simulando una conversazione intelligente.
+### 3. Deep Learning
+- File principali: `Deep.py`  
+- Descrizione: esempi di reti neurali profonde per diversi dataset.  
+- Tecnologie: Python, TensorFlow / PyTorch.  
+- Come usare: eseguire lo script o aprire il notebook per esempi step-by-step.
 
-🧠 2. Classificazione di immagini con Python e TensorFlow
-Tecnologie utilizzate: Python, TensorFlow, NumPy, Matplotlib
+---
 
-Descrizione: Progetto di classificazione immagini tramite una rete neurale convoluzionale (CNN).
+### 4. Riconoscimento Facciale
+- File principali: `RiconoscimentoFacciale.py`  
+- Descrizione: riconoscimento facciale tramite webcam o immagini statiche.  
+- Tecnologie: Python, OpenCV, face-recognition.  
+- Come usare: eseguire lo script e seguire le istruzioni a schermo.
 
-Dataset: MNIST / CIFAR-10
+---
 
-Obiettivi: Addestrare un modello per il riconoscimento di cifre o oggetti.
+### 5. Notebook di approfondimento
+- File: `IntelligenzaArtificiale.ipynb`  
+- Descrizione: notebook Jupyter con esempi di AI, training di modelli, e test.  
+- Come usare: aprire con Jupyter Notebook o JupyterLab.
 
-Risultato: Precisione del modello >90% su test set.
+---
 
-📊 3. Previsione dati e regressione con Python
-Tecnologie utilizzate: Python, scikit-learn, Pandas, Matplotlib
+## ⚙️ Tecnologie utilizzate
+- Python, PHP, HTML  
+- Jupyter Notebook  
+- TensorFlow / PyTorch  
+- OpenCV  
+- NumPy, Pandas, scikit-learn  
 
-Descrizione: Applicazione di modelli di regressione lineare e polinomiale per analisi predittive (es. previsione vendite).
+---
 
-Risultato: Sviluppo di un modello predittivo accurato e dashboard di visualizzazione dei risultati.
+## 📌 Note
+- Alcuni file `.zip` contengono progetti completi; consigliato estrarli in cartelle dedicate.  
+- Ogni progetto potrebbe avere requisiti specifici; leggere il README interno se presente.  
 
-🌐 4. Sistema di Raccomandazione con PHP e Python
-Tecnologie utilizzate: PHP (per interfaccia e backend), Python (per logica di machine learning), API REST
+---
 
-Descrizione: Sistema che suggerisce contenuti personalizzati in base alle preferenze degli utenti (Content-based Filtering).
+## 📄 Licenza
+Questa repository è condivisa a scopo educativo e personale. Per usi commerciali contattare l’autore.
 
-Obiettivi: Integrare un algoritmo di raccomandazione in un’applicazione web PHP.
+---
 
-Risultato: Personalizzazione dell’esperienza utente e miglioramento dell’engagement.
-
-🧪 Cos'è il Machine Learning
-Il Machine Learning è un metodo di analisi dati che automatizza la costruzione di modelli analitici. È una branca dell’Intelligenza Artificiale che si basa sull’idea che i sistemi possano imparare dai dati, identificare pattern e prendere decisioni con un intervento umano ridotto al minimo.
+## 👤 Autore
+**SalvoNet** – Tecnico in elettronica appassionato di AI e programmazione.
