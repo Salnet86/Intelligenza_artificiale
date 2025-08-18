@@ -68,5 +68,15 @@ Questa repository è condivisa a scopo educativo e personale. Per usi commercial
 
 ---
 
+### 6. Tutorial HTML Reti Neurali
+- File principali: `tutorial1.html`, `tutorial2.html`, …  
+- Descrizione: esempi pratici di rete neurale con calcoli, forward pass e backpropagation spiegati passo passo.  
+- Come usare: aprire i file `.html` in un browser.  
+- Obiettivo: capire il funzionamento delle reti neurali in modo visivo e interattivo.
+- 
+
+
+
+
 ## 👤 Autore
 **SalvoNet** – Tecnico in elettronica appassionato di AI e programmazione.
