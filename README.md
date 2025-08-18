@@ -1,5 +1,5 @@
 Applicazioni svolte in stage sulla intelligenza artificiale 
-con linguaggi JavaScript php python 
+con linguaggi JavaScript php python  
 
 
 machine learning
