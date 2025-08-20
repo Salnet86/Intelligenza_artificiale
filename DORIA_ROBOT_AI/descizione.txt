@@ -1,0 +1,39 @@
+Progetto: Chatbot Virtuale Interattivo con Avatar Animato
+
+Descrizione generale:
+Si tratta di un assistente virtuale interattivo, chiamato Doria, capace di rispondere a input testuali dell’utente tramite una combinazione di dataset predefinito e una rete neurale client-side. Il progetto include sia la componente di intelligenza artificiale che quella di interfaccia grafica e animazione.
+
+Ruolo e contributi:
+
+Intelligenza artificiale (AI) – JavaScript (tuo contributo)
+
+Implementazione di una rete neurale semplice con forward propagation e backpropagation per l’apprendimento.
+
+Gestione dei dati di addestramento dal database (intents) e addestramento della rete sul client.
+
+Logica per la generazione di risposte testuali basata sia su pattern predefiniti sia sulla rete neurale come fallback.
+
+Funzioni di preprocessing dei testi per trasformare input testuali in numeri utilizzabili dalla rete.
+
+Interfaccia grafica e animazioni – HTML/CSS/JavaScript (Elena)
+
+Creazione di una chat UI responsiva, con area di input, log dei messaggi e scroll automatico.
+
+Implementazione di un avatar SVG dettagliato con bocca e occhi animati.
+
+Sincronizzazione della bocca con la sintesi vocale (SpeechSynthesis API) per dare l’effetto di parlato realistico.
+
+Animazioni estetiche di blinking degli occhi e variazioni della bocca in base al testo pronunciato.
+
+Tecnologie utilizzate:
+
+Front-end: HTML5, CSS3 (Flexbox, variabili CSS), JavaScript (ES6+)
+
+Back-end: PHP, MySQL (gestione dataset e salvataggio chat)
+
+AI: Rete neurale feedforward in JavaScript, funzioni sigmoid, backpropagation
+
+Accessibilità e UX: aria-live per chat, placeholder e label semanticamente corretti, UI responsive per mobile
+
+Risultato finale:
+Un chatbot interattivo in grado di comprendere e rispondere agli utenti, con animazioni visive sincronizzate al parlato e capacità di apprendere dal dataset degli intent, offrendo un’esperienza immersiva e naturale.
