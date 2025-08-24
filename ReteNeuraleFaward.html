@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Mini Chatbot</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 50px;
+}
+#chatbox {
+    width: 100%;
+    height: 300px;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    overflow-y: scroll;
+}
+#userInput {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+}
+#sendBtn {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+.bot-msg {
+    color: blue;
+    margin: 5px 0;
+}
+.user-msg {
+    color: green;
+    margin: 5px 0;
+}
+</style>
+</head>
+<body>
+
+<h2>Mini Chatbot</h2>
+<div id="chatbox"></div>
+<br>
+<input type="text" id="userInput" placeholder="Scrivi qualcosa...">
+<button id="sendBtn">Invia</button>
+
+<script>
+// --- Dati JSON ---
+let intents = {
+    "intents": [
+        { "tag": "saluto", "patterns": ["ciao","salve","hey"], "responses": ["Ciao!","Salve!","Ehi!"] },
+        { "tag": "addio", "patterns": ["arrivederci","ciao ciao"], "responses": ["A presto!","Ciao ciao!"] }
+    ]
+};
+
+// --- Parametri rete ---
+let neuroniHidden = 10;
+let learningRate = 0.5;
+let H1=[], BIAS=[], pesi_out=[], bias_out=[];
+let VOCABOLARIO=[], TARGET=[], VETTORI=[];
+let z1=[], z2=[];
+
+// --- Sigmoide ---
+function sigmoid(x){ return 1/(1+Math.exp(-x)); }
+function sigmoid_derivata(x){ return x*(1-x); }
+
+// --- Preparo TARGET one-hot e VOCABOLARIO ---
+let tags=[];
+for(let i=0;i<intents.intents.length;i++){
+    tags.push(intents.intents[i].tag);
+}
+for(let i=0;i<intents.intents.length;i++){
+    // TARGET one-hot
+    let vett = new Array(tags.length).fill(0);
+    vett[tags.indexOf(intents.intents[i].tag)] = 1;
+    for(let j=0;j<intents.intents[i].patterns.length;j++){
+        TARGET.push(vett.slice()); // copia
+        // INPUT e VOCABOLARIO
+        let parole = intents.intents[i].patterns[j].split(" ");
+        for(let p=0;p<parole.length;p++){
+            if(VOCABOLARIO.indexOf(parole[p])==-1) VOCABOLARIO.push(parole[p]);
+        }
+        VETTORI.push(parole); // ancora parole, trasformeremo in vettori
+    }
+}
+
+// --- Trasformo in bag-of-words ---
+for(let i=0;i<VETTORI.length;i++){
+    let vett = [];
+    for(let j=0;j<VOCABOLARIO.length;j++){
+        if(VETTORI[i].indexOf(VOCABOLARIO[j])!=-1) vett.push(1);
+        else vett.push(0);
+    }
+    VETTORI[i] = vett;
+}
+
+// --- Inizializzo pesi e bias ---
+function initLayer(){
+    H1=[]; BIAS=[]; pesi_out=[]; bias_out=[];
+    for(let i=0;i<neuroniHidden;i++){
+        let pesiNeurone=[];
+        for(let j=0;j<VOCABOLARIO.length;j++) pesiNeurone.push(Math.random()*0.5);
+        H1.push(pesiNeurone);
+        BIAS.push(Math.random()*0.2);
+    }
+    let numOut = TARGET[0].length;
+    for(let i=0;i<numOut;i++){
+        let pesiN=[];
+        for(let j=0;j<neuroniHidden;j++) pesiN.push(Math.random()*0.5);
+        pesi_out.push(pesiN);
+        bias_out.push(Math.random()*0.2);
+    }
+}
+
+// --- Forward pass ---
+function forwardPass(){
+    z1=[]; z2=[];
+    for(let f=0;f<VETTORI.length;f++){
+        let outH=[];
+        for(let i=0;i<H1.length;i++){
+            let somma=0;
+            for(let j=0;j<H1[i].length;j++) somma+=H1[i][j]*VETTORI[f][j];
+            somma+=BIAS[i];
+            outH.push(sigmoid(somma));
+        }
+        z1.push(outH);
+
+        let outL=[];
+        for(let i=0;i<pesi_out.length;i++){
+            let somma=0;
+            for(let j=0;j<pesi_out[i].length;j++) somma+=pesi_out[i][j]*outH[j];
+            somma+=bias_out[i];
+            outL.push(sigmoid(somma));
+        }
+        z2.push(outL);
+    }
+}
+
+// --- Addestramento semplice ---
+function train(epochs){
+    initLayer();
+    for(let e=0;e<epochs;e++){
+        forwardPass();
+        // delta output
+        let delta2=[];
+        for(let f=0;f<z2.length;f++){
+            let d=[];
+            for(let i=0;i<z2[f].length;i++) d.push((TARGET[f][i]-z2[f][i])*sigmoid_derivata(z2[f][i]));
+            delta2.push(d);
+        }
+        // delta hidden
+        let delta1=[];
+        for(let f=0;f<z1.length;f++){
+            let dH=[];
+            for(let i=0;i<H1.length;i++){
+                let sum=0;
+                for(let j=0;j<pesi_out.length;j++) sum+=delta2[f][j]*pesi_out[j][i];
+                dH.push(sum*sigmoid_derivata(z1[f][i]));
+            }
+            delta1.push(dH);
+        }
+        // aggiorno pesi output
+        for(let i=0;i<pesi_out.length;i++){
+            for(let j=0;j<pesi_out[i].length;j++){
+                for(let f=0;f<z1.length;f++) pesi_out[i][j]+=learningRate*delta2[f][i]*z1[f][j];
+            }
+            for(let f=0;f<z1.length;f++) bias_out[i]+=learningRate*delta2[f][i];
+        }
+        // aggiorno pesi hidden
+        for(let i=0;i<H1.length;i++){
+            for(let j=0;j<H1[i].length;j++){
+                for(let f=0;f<VETTORI.length;f++) H1[i][j]+=learningRate*delta1[f][i]*VETTORI[f][j];
+            }
+            for(let f=0;f<VETTORI.length;f++) BIAS[i]+=learningRate*delta1[f][i];
+        }
+    }
+}
+
+// --- Risposta bot ---
+function rispondi(msg){
+    let inputVec=[];
+    for(let i=0;i<VOCABOLARIO.length;i++){
+        inputVec.push(msg.indexOf(VOCABOLARIO[i])!=-1?1:0);
+    }
+    let outH=[];
+    for(let i=0;i<H1.length;i++){
+        let somma=0;
+        for(let j=0;j<H1[i].length;j++) somma+=H1[i][j]*inputVec[j];
+        somma+=BIAS[i];
+        outH.push(sigmoid(somma));
+    }
+    let outL=[];
+    for(let i=0;i<pesi_out.length;i++){
+        let somma=0;
+        for(let j=0;j<pesi_out[i].length;j++) somma+=pesi_out[i][j]*outH[j];
+        somma+=bias_out[i];
+        outL.push(sigmoid(somma));
+    }
+    let max=Math.max.apply(null,outL);
+    let ind=outL.indexOf(max);
+    return intents.intents[ind].responses[Math.floor(Math.random()*intents.intents[ind].responses.length)];
+}
+
+// --- Avvio addestramento ---
+train(500);
+
+// --- Interazione HTML ---
+const chatbox = document.getElementById("chatbox");
+document.getElementById("sendBtn").addEventListener("click",function(){
+    let utente=document.getElementById("userInput").value.toLowerCase().trim();
+    if(!utente) return;
+    chatbox.innerHTML+='<div class="user-msg">Tu: '+utente+'</div>';
+    let risposta=rispondi(utente.split(" "));
+    chatbox.innerHTML+='<div class="bot-msg">Bot: '+risposta+'</div>';
+    chatbox.scrollTop=chatbox.scrollHeight;
+    document.getElementById("userInput").value='';
+});
+</script>
+
+</body>
+</html>
+

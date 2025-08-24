@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Chatbot con pesi caricati</title>
+<style>
+body { font-family: Arial; background:#f0f0f0; padding:50px;}
+#chatbox { width:100%; height:300px; background:#fff; border:1px solid #ccc; padding:10px; overflow-y:scroll;}
+#userInput { width:70%; padding:10px; font-size:16px;}
+#sendBtn, #loadBtn { padding:10px 20px; font-size:16px;}
+.bot-msg { color:blue; margin:5px 0;}
+.user-msg { color:green; margin:5px 0;}
+</style>
+</head>
+<body>
+
+<h2>Mini Chatbot</h2>
+<div id="chatbox"></div><br>
+<input type="text" id="userInput" placeholder="Scrivi qualcosa...">
+<button id="sendBtn">Invia</button>
+<input type="file" id="loadFile">
+
+<script>
+// --- Intents obbligatori ---
+let intents = [
+  {tag:"saluto", patterns:["ciao","salve","hey"], responses:["Ciao!","Salve!","Ehi!"]},
+  {tag:"addio", patterns:["arrivederci","ciao ciao"], responses:["A presto!","Ciao ciao!"]}
+];
+
+// --- Parametri e strutture ---
+let H1=[], BIAS=[], pesi_out=[], bias_out=[];
+let VOCABOLARIO=[], TARGET=[];
+
+// --- Sigmoide ---
+function sigmoid(x){ return 1/(1+Math.exp(-x)); }
+
+// --- Risposta bot ---
+function rispondi(msg){
+  if(H1.length==0 || pesi_out.length==0) return "Devi prima caricare i pesi!";
+  let inputVec=[];
+  for(let i=0;i<VOCABOLARIO.length;i++)
+    inputVec.push(msg.indexOf(VOCABOLARIO[i])!=-1?1:0);
+
+  let outH=[];
+  for(let i=0;i<H1.length;i++){
+    let somma=BIAS[i];
+    for(let j=0;j<H1[i].length;j++) somma+=H1[i][j]*inputVec[j];
+    outH.push(sigmoid(somma));
+  }
+
+  let outL=[];
+  for(let i=0;i<pesi_out.length;i++){
+    let somma=bias_out[i];
+    for(let j=0;j<pesi_out[i].length;j++) somma+=pesi_out[i][j]*outH[j];
+    outL.push(sigmoid(somma));
+  }
+
+  // Trovo indice max
+  let max=outL[0], idx=0;
+  for(let i=1;i<outL.length;i++){ if(outL[i]>max){ max=outL[i]; idx=i; } }
+  let resp = intents[idx].responses;
+  return resp[Math.floor(Math.random()*resp.length)];
+}
+
+// --- Carica JSON pesi ---
+function loadWeights(file){
+  let reader = new FileReader();
+  reader.onload = function(e){
+    let data = JSON.parse(e.target.result);
+    H1 = data.H1;
+    BIAS = data.BIAS;
+    pesi_out = data.pesi_out;
+    bias_out = data.bias_out;
+    VOCABOLARIO = data.VOCABOLARIO;
+    TARGET = data.TARGET;
+    alert("Pesi caricati con successo!");
+  };
+  reader.readAsText(file);
+}
+
+// --- Interazione HTML ---
+const chatbox=document.getElementById("chatbox");
+document.getElementById("sendBtn").addEventListener("click",function(){
+  let utente=document.getElementById("userInput").value.toLowerCase().trim();
+  if(!utente) return;
+  chatbox.innerHTML+='<div class="user-msg">Tu: '+utente+'</div>';
+  let risposta=rispondi(utente.split(" "));
+  chatbox.innerHTML+='<div class="bot-msg">Bot: '+risposta+'</div>';
+  chatbox.scrollTop=chatbox.scrollHeight;
+  document.getElementById("userInput").value='';
+});
+
+document.getElementById("loadFile").addEventListener("change",function(){
+  loadWeights(this.files[0]);
+});
+</script>
+</body>
+</html>
