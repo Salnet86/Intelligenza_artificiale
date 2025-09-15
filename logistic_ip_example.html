@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Esercizio Regressione Logistica - IP</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; background: #f4f4f9; color: #333; }
+    h1 { color: #005f73; }
+    h2 { color: #0a9396; margin-top: 1.5em; }
+    .formula { background: #fff; padding: 10px; border-radius: 8px; margin: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    code { background: #e0fbfc; padding: 2px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>📘 Regressione Logistica su IP (esempio matematico)</h1>
+
+  <h2>1) Trasformazione IP in feature</h2>
+  <div class="formula">
+    IP = 9.169.121.184 → Ottetti = [9, 169, 121, 184]<br>
+    Normalizzazione (÷255):<br>
+    x₁ = 0.0353, x₂ = 0.6627, x₃ = 0.4745, x₄ = 0.7216
+  </div>
+
+  <h2>2) Modello logistico</h2>
+  <div class="formula">
+    Pesi w = [0.5, -1.2, 0.8, 0.3], bias b = -0.1<br>
+    z = b + Σ(wᵢ·xᵢ)
+  </div>
+
+  <h2>3) Calcolo di z</h2>
+  <div class="formula">
+    z = -0.1 + (0.5·0.0353) + (-1.2·0.6627) + (0.8·0.4745) + (0.3·0.7216)<br>
+    z ≈ -0.2816
+  </div>
+
+  <h2>4) Sigmoide → Probabilità</h2>
+  <div class="formula">
+    σ(z) = 1 / (1 + e^(-z))<br>
+    σ(-0.2816) ≈ 0.4301 → 43.01% probabilità di attacco
+  </div>
+
+  <h2>5) Loss (target y=1)</h2>
+  <div class="formula">
+    L = -ln(σ(z)) = -ln(0.4301) ≈ 0.8438
+  </div>
+
+  <h2>6) Gradiente</h2>
+  <div class="formula">
+    δ = σ(z) - y = 0.4301 - 1 = -0.5699<br><br>
+    ∂L/∂w₁ = δ·x₁ ≈ -0.0201<br>
+    ∂L/∂w₂ = δ·x₂ ≈ -0.3777<br>
+    ∂L/∂w₃ = δ·x₃ ≈ -0.2704<br>
+    ∂L/∂w₄ = δ·x₄ ≈ -0.4112<br>
+    ∂L/∂b = δ ≈ -0.5699
+  </div>
+
+  <h2>7) Aggiornamento pesi (α = 0.1)</h2>
+  <div class="formula">
+    w₁' = 0.5020<br>
+    w₂' = -1.1622<br>
+    w₃' = 0.8270<br>
+    w₄' = 0.3411<br>
+    b'  = -0.0430
+  </div>
+
+  <h2>✔ Interpretazione</h2>
+  <p>
+    Con i pesi iniziali il modello dava probabilità 43% (< 50%) → classe <b>non attacco</b>.<br>
+    Dopo l’aggiornamento i pesi si spostano per aumentare la probabilità verso l’etichetta reale y=1.
+  </p>
+</body>
+</html>
