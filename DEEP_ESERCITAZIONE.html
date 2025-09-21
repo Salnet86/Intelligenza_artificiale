@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Esempio Backpropagation</title>
+<style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+    h2 { color: #2c3e50; }
+    .formula { background: #ecf0f1; padding: 5px 10px; display: inline-block; margin: 5px 0; border-radius: 5px; }
+    .calcolo { color: #e74c3c; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>Esempio Backpropagation</h1>
+
+<h2>1️⃣ Dati iniziali</h2>
+<ul>
+    <li>Input: x = [0.9, 0.6]</li>
+    <li>Hidden layer: 2 neuroni (h1, h2)</li>
+    <li>Output layer: 1 neurone</li>
+    <li>Target: y = 1</li>
+    <li>Pesi e bias iniziali:
+        <ul>
+            <li>w1=0.88, w2=0.99, w3=0.6, w4=0.88</li>
+            <li>w5=0.9, w6=0.6</li>
+            <li>b1=0.1, b2=0.2, b3=0.05</li>
+        </ul>
+    </li>
+    <li>Learning rate η = 0.1</li>
+</ul>
+
+<h2>2️⃣ Forward Propagation</h2>
+
+<p><strong>Hidden layer:</strong></p>
+
+<p class="formula">z1 = x1*w1 + x2*w2 + b1 = 0.9*0.88 + 0.6*0.99 + 0.1 = <span class="calcolo">1.486</span></p>
+<p class="formula">a1 = σ(z1) = 1 / (1 + e^-1.486) ≈ <span class="calcolo">0.815</span></p>
+
+<p class="formula">z2 = x1*w3 + x2*w4 + b2 = 0.9*0.6 + 0.6*0.88 + 0.2 = <span class="calcolo">1.268</span></p>
+<p class="formula">a2 = σ(z2) = 1 / (1 + e^-1.268) ≈ <span class="calcolo">0.780</span></p>
+
+<p><strong>Output layer:</strong></p>
+<p class="formula">z3 = a1*w5 + a2*w6 + b3 = 0.815*0.9 + 0.780*0.6 + 0.05 = <span class="calcolo">1.2515</span></p>
+<p class="formula">a3 = σ(z3) = 1 / (1 + e^-1.2515) ≈ <span class="calcolo">0.777</span></p>
+
+<h2>3️⃣ Calcolo Delta Output</h2>
+<p class="formula">δo = (a3 - y) * a3*(1 - a3) = (0.777 - 1)*0.777*(1 - 0.777) ≈ <span class="calcolo">-0.0386</span></p>
+
+<h2>4️⃣ Calcolo Delta Hidden Layer</h2>
+<p class="formula">δ1 = δo * w5 * a1*(1 - a1) = -0.0386 * 0.9 * 0.815*0.185 ≈ <span class="calcolo">-0.00523</span></p>
+<p class="formula">δ2 = δo * w6 * a2*(1 - a2) = -0.0386 * 0.6 * 0.780*0.22 ≈ <span class="calcolo">-0.00397</span></p>
+
+<h2>5️⃣ Aggiornamento Pesi e Bias</h2>
+
+<p><strong>Output layer:</strong></p>
+<p class="formula">w5 = w5 - η*δo*a1 = 0.9 - 0.1*(-0.0386*0.815) ≈ <span class="calcolo">0.90315</span></p>
+<p class="formula">w6 = w6 - η*δo*a2 = 0.6 - 0.1*(-0.0386*0.780) ≈ <span class="calcolo">0.60301</span></p>
+<p class="formula">b3 = b3 - η*δo = 0.05 - 0.1*(-0.0386) ≈ <span class="calcolo">0.05386</span></p>
+
+<p><strong>Hidden layer:</strong></p>
+<p class="formula">w1 = w1 - η*δ1*x1 = 0.88 - 0.1*(-0.00523*0.9) ≈ <span class="calcolo">0.88047</span></p>
+<p class="formula">w2 = w2 - η*δ1*x2 = 0.99 - 0.1*(-0.00523*0.6) ≈ <span class="calcolo">0.99031</span></p>
+<p class="formula">w3 = w3 - η*δ2*x1 = 0.6 - 0.1*(-0.00397*0.9) ≈ <span class="calcolo">0.60036</span></p>
+<p class="formula">w4 = w4 - η*δ2*x2 = 0.88 - 0.1*(-0.00397*0.6) ≈ <span class="calcolo">0.88024</span></p>
+<p class="formula">b1 = b1 - η*δ1 = 0.1 - 0.1*(-0.00523) ≈ <span class="calcolo">0.10052</span></p>
+<p class="formula">b2 = b2 - η*δ2 = 0.2 - 0.1*(-0.00397) ≈ <span class="calcolo">0.20040</span></p>
+
+</body>
+</html>

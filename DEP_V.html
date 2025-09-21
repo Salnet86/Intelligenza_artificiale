@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Backpropagation - Diagramma con Forward e Delta</title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .layer { display: flex; justify-content: center; margin: 20px 0; }
+    .neuron { width: 60px; height: 60px; border-radius: 50%; background: #3498db; color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 20px; position: relative; font-weight: bold; }
+    .neuron span { font-size: 14px; }
+    .delta { color: #e74c3c; font-weight: bold; }
+    .formula-box { background: #ecf0f1; padding: 5px 10px; border-radius: 5px; margin: 10px 0; display: inline-block; }
+</style>
+</head>
+<body>
+
+<h1>Backpropagation - Forward e Delta</h1>
+
+<div class="layer">
+    <div class="neuron">x1</div>
+    <div class="neuron">x2</div>
+</div>
+
+<div class="layer">
+    <div class="neuron">h1<br><span class="delta">δ1</span></div>
+    <div class="neuron">h2<br><span class="delta">δ2</span></div>
+</div>
+
+<div class="layer">
+    <div class="neuron">o1<br><span class="delta">δo</span></div>
+</div>
+
+<h2>Formule Backpropagation</h2>
+
+<div class="formula-box">
+    <strong>Forward propagation:</strong><br>
+    z1 = x1*w1 + x2*w2 + b1<br>
+    a1 = σ(z1)<br>
+    z2 = x1*w3 + x2*w4 + b2<br>
+    a2 = σ(z2)<br>
+    z3 = a1*w5 + a2*w6 + b3<br>
+    a3 = σ(z3)
+</div>
+
+<div class="formula-box">
+    <strong>Delta output:</strong><br>
+    δo = (a3 - y) * σ'(z3) = (a3 - y) * a3 * (1 - a3)
+</div>
+
+<div class="formula-box">
+    <strong>Delta hidden:</strong><br>
+    δ1 = δo * w5 * σ'(z1) = δo * w5 * a1 * (1 - a1)<br>
+    δ2 = δo * w6 * σ'(z2) = δo * w6 * a2 * (1 - a2)
+</div>
+
+<div class="formula-box">
+    <strong>Aggiornamento pesi e bias:</strong><br>
+    w5 = w5 - η * δo * a1<br>
+    w6 = w6 - η * δo * a2<br>
+    b3 = b3 - η * δo<br>
+    w1 = w1 - η * δ1 * x1<br>
+    w2 = w2 - η * δ1 * x2<br>
+    w3 = w3 - η * δ2 * x1<br>
+    w4 = w4 - η * δ2 * x2<br>
+    b1 = b1 - η * δ1<br>
+    b2 = b2 - η * δ2
+</div>
+
+<svg width="100%" height="300">
+    <!-- Forward propagation - blu -->
+    <line x1="100" y1="50" x2="200" y2="150" stroke="#3498db" stroke-width="2" marker-end="url(#arrowF)"/>
+    <line x1="100" y1="120" x2="200" y2="150" stroke="#3498db" stroke-width="2" marker-end="url(#arrowF)"/>
+    <line x1="200" y1="150" x2="350" y2="150" stroke="#3498db" stroke-width="2" marker-end="url(#arrowF)"/>
+    <line x1="300" y1="150" x2="350" y2="150" stroke="#3498db" stroke-width="2" marker-end="url(#arrowF)"/>
+
+    <!-- Backpropagation - rosso -->
+    <line x1="350" y1="150" x2="200" y2="150" stroke="#e74c3c" stroke-width="2" marker-end="url(#arrowB)"/>
+    <line x1="350" y1="150" x2="300" y2="150" stroke="#e74c3c" stroke-width="2" marker-end="url(#arrowB)"/>
+
+    <defs>
+        <marker id="arrowF" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 z" fill="#3498db" />
+        </marker>
+        <marker id="arrowB" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 z" fill="#e74c3c" />
+        </marker>
+    </defs>
+</svg>
+
+</body>
+</html>

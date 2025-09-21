@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Esempio Backpropagation - Formule</title>
+<style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+    h2 { color: #2c3e50; }
+    .formula { background: #ecf0f1; padding: 5px 10px; display: inline-block; margin: 5px 0; border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<h1>Esempio Backpropagation - Solo Formule</h1>
+
+<h2>1️⃣ Dati iniziali</h2>
+<ul>
+    <li>Input: x = [x1, x2]</li>
+    <li>Hidden layer: 2 neuroni (h1, h2)</li>
+    <li>Output layer: 1 neurone</li>
+    <li>Target: y</li>
+    <li>Pesi e bias:
+        <ul>
+            <li>Hidden layer: w1, w2, w3, w4, b1, b2</li>
+            <li>Output layer: w5, w6, b3</li>
+        </ul>
+    </li>
+    <li>Learning rate: η</li>
+</ul>
+
+<h2>2️⃣ Forward Propagation</h2>
+
+<p><strong>Hidden layer:</strong></p>
+<p class="formula">z1 = x1*w1 + x2*w2 + b1</p>
+<p class="formula">a1 = σ(z1)</p>
+
+<p class="formula">z2 = x1*w3 + x2*w4 + b2</p>
+<p class="formula">a2 = σ(z2)</p>
+
+<p><strong>Output layer:</strong></p>
+<p class="formula">z3 = a1*w5 + a2*w6 + b3</p>
+<p class="formula">a3 = σ(z3)</p>
+
+<h2>3️⃣ Calcolo Delta Output</h2>
+<p class="formula">δo = (a3 - y) * σ'(z3) = (a3 - y) * a3 * (1 - a3)</p>
+
+<h2>4️⃣ Calcolo Delta Hidden Layer</h2>
+<p class="formula">δ1 = δo * w5 * σ'(z1) = δo * w5 * a1 * (1 - a1)</p>
+<p class="formula">δ2 = δo * w6 * σ'(z2) = δo * w6 * a2 * (1 - a2)</p>
+
+<h2>5️⃣ Aggiornamento Pesi e Bias</h2>
+
+<p><strong>Output layer:</strong></p>
+<p class="formula">w5 = w5 - η * δo * a1</p>
+<p class="formula">w6 = w6 - η * δo * a2</p>
+<p class="formula">b3 = b3 - η * δo</p>
+
+<p><strong>Hidden layer:</strong></p>
+<p class="formula">w1 = w1 - η * δ1 * x1</p>
+<p class="formula">w2 = w2 - η * δ1 * x2</p>
+<p class="formula">w3 = w3 - η * δ2 * x1</p>
+<p class="formula">w4 = w4 - η * δ2 * x2</p>
+<p class="formula">b1 = b1 - η * δ1</p>
+<p class="formula">b2 = b2 - η * δ2</p>
+
+</body>
+</html>
