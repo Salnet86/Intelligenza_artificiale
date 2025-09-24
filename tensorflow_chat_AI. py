@@ -1,0 +1,40 @@
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam
+
+# Dataset di esempio: input frasi convertite in vettori e intent corrispondente
+training_data = np.array([
+    [1,0,0],  # "ciao"
+    [0,1,0],  # "come stai?"
+    [0,0,1]   # "addio"
+])
+
+output_data = np.array([
+    [1,0,0],  # risposta: saluto
+    [0,1,0],  # risposta: stato
+    [0,0,1]   # risposta: congedo
+])
+
+# Creazione modello
+model = Sequential()
+model.add(Dense(5, input_shape=(3,), activation='relu'))
+model.add(Dense(3, activation='softmax'))
+
+# Compilazione modello
+model.compile(optimizer=Adam(learning_rate=0.01),
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Addestramento
+model.fit(training_data, output_data, epochs=500, verbose=0)
+
+# Test del chatbot senza funzioni
+input_test = np.array([[1,0,0]])  # "ciao"
+prediction = model.predict(input_test)
+intent_index = np.argmax(prediction)
+responses = ["Ciao! Come stai?", "Sto bene, grazie!", "Arrivederci!"]
+
+print("Predizione:", responses[intent_index])
+print("Probabilità:", prediction[0])
