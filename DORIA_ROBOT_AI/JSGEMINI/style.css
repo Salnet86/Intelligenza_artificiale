@@ -1,0 +1,122 @@
+ /* 🌌 Sfondo tipo caverna con bagliore neon */
+    body {
+      margin: 0;
+      font-family: 'Consolas', 'Lucida Console', monospace;
+      background: radial-gradient(circle at 20% 20%, #0d0f11 0%, #000000 100%);
+      color: #e0e0e0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Contenitore principale */
+    .container {
+      background: rgba(15, 20, 25, 0.9);
+      border: 2px solid #00ffcc55;
+      border-radius: 16px;
+      box-shadow: 0 0 25px #00ffc840, inset 0 0 10px #00ffc840;
+      padding: 20px;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h2 {
+      text-align: center;
+      color: #00ffc8;
+      text-shadow: 0 0 10px #00ffc8;
+      letter-spacing: 2px;
+    }
+
+    /* Area chat */
+    #chat {
+      background: #050708;
+      border: 1px solid #00ffc825;
+      border-radius: 10px;
+      padding: 15px;
+      flex: 1;
+      overflow-y: auto;
+      box-shadow: inset 0 0 20px #00ffc820;
+      scroll-behavior: smooth;
+    }
+
+    /* Messaggi */
+    .msg {
+      margin: 10px 0;
+      padding: 10px 14px;
+      border-radius: 10px;
+      line-height: 1.4em;
+      max-width: 80%;
+      animation: appear 0.3s ease;
+    }
+
+    @keyframes appear {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .user {
+      background: linear-gradient(135deg, #002b5b, #004080);
+      color: #cceeff;
+      margin-left: auto;
+      border: 1px solid #00aaff55;
+      box-shadow: 0 0 10px #00aaff55;
+    }
+
+    .bot {
+      background: linear-gradient(135deg, #003321, #004d3d);
+      color: #aaffcc;
+      margin-right: auto;
+      border: 1px solid #00ffb055;
+      box-shadow: 0 0 10px #00ffb055;
+    }
+
+    /* Campo testo + pulsante */
+    textarea {
+      background: #0d1117;
+      color: #00ffc8;
+      border: 1px solid #00ffc870;
+      border-radius: 8px;
+      padding: 10px;
+      resize: none;
+      margin-top: 10px;
+      height: 60px;
+      outline: none;
+      font-family: 'Consolas';
+    }
+    textarea::placeholder {
+      color: #008060;
+    }
+
+    button {
+      background: linear-gradient(135deg, #00ffc8, #009970);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 0 10px #00ffc860;
+    }
+    button:hover {
+      background: #00ffcc;
+      box-shadow: 0 0 20px #00ffcc;
+      transform: scale(1.02);
+    }
+
+    /* Effetto “Gemini attivo” */
+    .bot::before {
+      content: "🤖 ";
+      animation: pulse 2s infinite;
+      text-shadow: 0 0 10px #00ffc8;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }

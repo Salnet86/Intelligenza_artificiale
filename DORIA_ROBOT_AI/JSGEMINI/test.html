@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Gemini (solo HTML + JS)</title>
+  <style>
+    body { font-family: Arial; background: #f5f5f5; padding: 20px; }
+    #chat { background: #fff; padding: 15px; border-radius: 10px; max-width: 500px; margin: auto; height: 400px; overflow-y: auto; }
+    .msg { margin: 10px 0; padding: 8px; border-radius: 5px; }
+    .user { background: #d0e6ff; text-align: left; }
+    .bot { background: #d0ffd6; text-align: left; }
+    textarea { width: 100%; padding: 8px; margin-top: 10px; }
+    button { padding: 10px; margin-top: 5px; width: 100%; }
+  </style>
+</head>
+<body>
+  <h2>🤖 Chat con Gemini (senza Node.js)</h2>
+  <div id="chat"></div>
+  <textarea id="prompt" rows="3" placeholder="Scrivi qualcosa..."></textarea><br>
+  <button id="btnSend">Invia</button>
+
+  <script type="module">
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+    // ⚠️ Metti qui la tua API key (solo per test locale!)
+    const genAI = new GoogleGenerativeAI("");
+
+    const chat = document.getElementById("chat");
+    const btn = document.getElementById("btnSend");
+    const promptArea = document.getElementById("prompt");
+
+    btn.addEventListener("click", async () => {
+      const prompt = promptArea.value.trim();
+      if (!prompt) return;
+
+      // Mostra messaggio utente
+      chat.innerHTML += `<div class='msg user'><b>Tu:</b> ${prompt}</div>`;
+      promptArea.value = "";
+      chat.scrollTop = chat.scrollHeight;
+
+      try {
+
+       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+
+        const result = await model.generateContent(prompt);
+
+        // Mostra risposta Gemini
+        chat.innerHTML += `<div class='msg bot'><b>Gemini:</b> ${result.response.text()}</div>`;
+        chat.scrollTop = chat.scrollHeight;
+      } catch (err) {
+        console.error(err);
+        chat.innerHTML += `<div class='msg bot'><b>Errore:</b> impossibile contattare Gemini.</div>`;
+        chat.scrollTop = chat.scrollHeight;
+      }
+    });
+
+    // Premi Invio per inviare
+    promptArea.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  </script>
+</body>
+</html>
