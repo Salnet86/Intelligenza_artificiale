@@ -1,0 +1,23 @@
+[
+  {
+    "input": "Ciao come stai",
+    "output": "Ciao! Sto bene, grazie."
+  },
+  {
+    "input": "Salve come va",
+    "output": "Va tutto bene, grazie!"
+  },
+  {
+    "input": "Buongiorno a te",
+    "output": "Buongiorno, come posso aiutarti?"
+  },
+  {
+    "input": "Come stai oggi",
+    "output": "Oggi sto alla grande, grazie!"
+  }
+  ,
+  {
+    "input": "chi seii",
+    "output": "Sono una chat ai programmata!"
+  }
+]
