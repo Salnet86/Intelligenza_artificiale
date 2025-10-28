@@ -1,0 +1,14 @@
+let parole = ["ciao", "bene", "come", "stai", "ciao", "stai"];
+let vocabolo = [];
+
+for (let i = 0; i < parole.length; i++) {
+    let parola = parole[i];        // prendi l'elemento corrente
+    if (!vocabolo.includes(parola)) {
+        vocabolo.push(parola);     // aggiungi solo se non è già presente
+    }
+}
+
+// stampa le parole
+for (let i = 0; i < vocabolo.length; i++) {
+    console.log(vocabolo[i]);
+}
