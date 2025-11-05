@@ -1,0 +1,44 @@
+import math
+import random
+
+# 1️⃣ Inizializzazione dei vettori (valori casuali piccoli)
+W_in = {
+    "ciao": [random.uniform(-0.01, 0.01) for _ in range(3)],
+    "come": [random.uniform(-0.01, 0.01) for _ in range(3)]
+}
+W_out = {
+    "ciao": [random.uniform(-0.01, 0.01) for _ in range(3)],
+    "come": [random.uniform(-0.01, 0.01) for _ in range(3)]
+}
+
+# 2️⃣ Prodotto scalare ciao·come
+v_in = W_in["ciao"]
+v_out = W_out["come"]
+
+score = 0
+for i in range(3):
+    score += v_in[i] * v_out[i]
+
+# 3️⃣ Sigmoide
+prob = 1 / (1 + math.exp(-score))
+
+print("Prodotto scalare:", score)
+print("Sigmoide:", prob)
+
+# 4️⃣ Gradiente (target = 1, perché 'come' è nel contesto di 'ciao')
+target = 1
+grad = prob - target
+
+# 5️⃣ Aggiornamento dei vettori
+learning_rate = 0.1
+
+for i in range(3):
+    v_in[i] = v_in[i] - learning_rate * grad * v_out[i]
+    v_out[i] = v_out[i] - learning_rate * grad * v_in[i]
+
+# 6️⃣ Salvataggio nelle matrici
+W_in["ciao"] = v_in
+W_out["come"] = v_out
+
+print("Nuovo vettore ciao:", W_in["ciao"])
+print("Nuovo vettore come:", W_out["come"])
