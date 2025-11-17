@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat RNN (Tiny) — Demo</title>
+
+  <!-- Stili: chat bubbles, layout semplice -->
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#7c3aed;
+      --muted:#9aa3b2;
+      --mine:#0ea5a4;
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071029 0%, #081029 60%);color:#e6eef7}
+    .wrap{max-width:720px;margin:28px auto;padding:18px;}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.03);
+      border-radius:16px;padding:18px;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.7);
+    }
+    header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    header .dot{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#4f46e5);display:flex;align-items:center;justify-content:center;font-weight:700}
+    header h1{font-size:18px;margin:0}
+    header p{margin:0;color:var(--muted);font-size:13px}
+
+    /* chat area */
+    .chat-area{height:460px;overflow:auto;padding:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .msg{display:flex;margin:8px 0;gap:10px;align-items:flex-end}
+    .msg.user{justify-content:flex-end}
+    .bubble{
+      max-width:78%;padding:10px 14px;border-radius:12px;font-size:15px;line-height:1.3;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+    }
+    .bubble.user{
+      background:linear-gradient(90deg,var(--mine),#0bb3c0);
+      color:#021014;border-bottom-right-radius:6px;border-bottom-left-radius:12px;
+    }
+    .bubble.bot{
+      background:rgba(255,255,255,0.03);color:var(--muted);border-bottom-left-radius:6px;border-bottom-right-radius:12px;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .meta{font-size:12px;color:var(--muted);margin-top:6px}
+    .controls{display:flex;gap:8px;margin-top:12px;align-items:center}
+    input[type="text"]{
+      flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+      background:transparent;color:inherit;font-size:15px;outline:none;
+    }
+    button{
+      padding:10px 14px;border-radius:10px;border:none;background:var(--accent);color:white;font-weight:600;cursor:pointer;
+      box-shadow: 0 6px 20px rgba(124,58,237,0.18);
+    }
+    button:disabled{opacity:0.45;cursor:default;transform:none}
+    .info-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:13px;color:var(--muted)}
+    .small-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;color:var(--muted);cursor:pointer}
+    footer{margin-top:12px;font-size:12px;color:var(--muted);text-align:center}
+    .spinner{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow: 18px 0 0 var(--accent), -18px 0 0 var(--accent);opacity:0;animation:spin 1.1s linear infinite}
+    @keyframes spin {0%{opacity:0.15}50%{opacity:1}100%{opacity:0.15}}
+    /* responsive */
+    @media (max-width:520px){.wrap{padding:10px} .chat-area{height:380px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <div class="dot">R</div>
+        <div>
+          <h1>Chat RNN — demo</h1>
+          <p>Modello Tiny RNN + softmax (tf.js). Digita parole dal vocabolario: "ciao", "come", "stai", "bene", "male", "grazie", "ok".</p>
+        </div>
+      </header>
+
+      <div id="chat" class="chat-area" aria-live="polite"></div>
+
+      <div class="controls">
+        <input id="msg" type="text" placeholder="Scrivi una parola del vocabolario..." autocomplete="off" />
+        <button id="sendBtn" onclick="sendMessage()" disabled>Invia</button>
+        <button id="clearBtn" class="small-btn" onclick="clearChat()">Pulisci</button>
+      </div>
+
+      <div class="info-row">
+        <div id="status">Stato: <span id="stTxt">Inizializzo...</span></div>
+        <div><span id="epochInfo"></span></div>
+      </div>
+
+      <footer>
+        Piccolo demo educativo — modello addestrato in pagina (300 epoche su pochi esempi).
+      </footer>
+    </div>
+  </div>
+
+  <!-- TensorFlow.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+
+  <!-- Script: il tuo modello adattato all'interfaccia -->
+  <script>
+    // ==============================
+    // VOCABOLARIO DI ESEMPIO
+    // ==============================
+    const vocab = ["ciao", "come", "stai", "bene", "male", "grazie", "ok"];
+    const vocabSize = vocab.length;
+
+    // Mappa parola → indice
+    const wordToIndex = {};
+    vocab.forEach((w, i) => wordToIndex[w] = i);
+
+    // One-hot
+    function oneHot(index) {
+      const vec = new Array(vocabSize).fill(0);
+      vec[index] = 1;
+      return vec;
+    }
+
+    // ==============================
+    // CREAZIONE MODELLO
+    // ==============================
+    async function createModel() {
+      const model = tf.sequential();
+
+      // RNN
+      model.add(tf.layers.simpleRNN({
+        units: 256,
+        returnSequences: false,
+        inputShape: [1, vocabSize]
+      }));
+
+      // Softmax finale
+      model.add(tf.layers.dense({
+        units: vocabSize,
+        activation: 'softmax'
+      }));
+
+      model.compile({
+        optimizer: 'adam',
+        loss: 'categoricalCrossentropy'
+      });
+
+      return model;
+    }
+
+    let model;
+
+    // ==============================
+    // TRAINING DI ESEMPIO (TINY)
+    // ==============================
+    async function trainModel(onEpoch) {
+      const X = [];
+      const Y = [];
+
+      // "ciao" → "come"
+      X.push(oneHot(wordToIndex["ciao"]));
+      Y.push(oneHot(wordToIndex["come"]));
+
+      // "come" → "stai"
+      X.push(oneHot(wordToIndex["come"]));
+      Y.push(oneHot(wordToIndex["stai"]));
+
+      // "stai" → "bene"
+      X.push(oneHot(wordToIndex["stai"]));
+      Y.push(oneHot(wordToIndex["bene"]));
+
+      const xs = tf.tensor3d(X.map(x => [x])); // shape: [samples, 1, vocabSize]
+      const ys = tf.tensor2d(Y); // shape: [samples, vocabSize]
+
+      // fit con callback per aggiornare lo stato della UI
+      await model.fit(xs, ys, {
+        epochs: 300,
+        verbose: 0,
+        callbacks: {
+          onEpochEnd: async (epoch, logs) => {
+            if (onEpoch) onEpoch(epoch+1, logs.loss);
+            // forza rendering
+            await tf.nextFrame();
+          }
+        }
+      });
+
+      // libera tensori d'allenamento
+      xs.dispose(); ys.dispose();
+    }
+
+    // ==============================
+    // PREDIZIONE
+    // ==============================
+    async function predictNextWord(word) {
+      // controlla presenza nella mappa: usare hasOwnProperty per includere indice 0
+      if (!wordToIndex.hasOwnProperty(word)) return { error: true, text: "Non conosco questa parola." };
+
+      // input: shape [1,1,vocabSize]
+      const inputArr = [oneHot(wordToIndex[word])];
+      const input = tf.tensor3d([inputArr]); // [1,1,vocabSize]
+
+      // predict (evitare memory leak con tidy)
+      const output = model.predict(input);
+      const probs = await output.data(); // array di probabilità
+      input.dispose(); output.dispose();
+
+      // trova l'indice massimo
+      let maxIndex = 0;
+      let maxProb = -1;
+      for (let i = 0; i < probs.length; i++) {
+        if (probs[i] > maxProb) {
+          maxProb = probs[i];
+          maxIndex = i;
+        }
+      }
+
+      return { error: false, text: vocab[maxIndex], probs, chosenIndex: maxIndex, prob: maxProb };
+    }
+
+    // ==============================
+    // INTERFACCIA CHATBOT
+    // ==============================
+    const chat = document.getElementById("chat");
+    const sendBtn = document.getElementById("sendBtn");
+    const msgInput = document.getElementById("msg");
+    const stTxt = document.getElementById("stTxt");
+    const epochInfo = document.getElementById("epochInfo");
+
+    function appendMessage(text, who='bot', meta='') {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'msg ' + (who === 'user' ? 'user' : 'bot');
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble ' + (who === 'user' ? 'user' : 'bot');
+      bubble.innerText = text;
+      wrapper.appendChild(bubble);
+
+      if (meta) {
+        const m = document.createElement('div');
+        m.className = 'meta';
+        m.innerText = meta;
+        wrapper.appendChild(m);
+      }
+
+      chat.appendChild(wrapper);
+      // scroll to bottom
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function clearChat(){
+      chat.innerHTML = '';
+    }
+
+    async function sendMessage() {
+      const text = msgInput.value.trim().toLowerCase();
+      if (!text) return;
+      // disabilita UI breve
+      sendBtn.disabled = true;
+      msgInput.disabled = true;
+
+      appendMessage(text, 'user');
+      msgInput.value = '';
+
+      const result = await predictNextWord(text);
+      if (result.error) {
+        appendMessage(result.text, 'bot');
+      } else {
+        appendMessage(result.text, 'bot', `idx:${result.chosenIndex} prob:${(result.prob*100).toFixed(1)}%`);
+      }
+
+      // riabilita
+      sendBtn.disabled = false;
+      msgInput.disabled = false;
+      msgInput.focus();
+    }
+
+    // invio premendo Enter
+    msgInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!sendBtn.disabled) sendMessage();
+      }
+    });
+
+    // ==============================
+    // AVVIO
+    // ==============================
+    (async () => {
+      stTxt.innerText = 'Creazione modello...';
+      model = await createModel();
+
+      stTxt.innerText = 'Addestramento in corso...';
+      sendBtn.disabled = true;
+      msgInput.disabled = true;
+
+      // aggiorna visuale ogni 10 epoche per evitare troppi re-render
+      let lastShown = 0;
+      await trainModel((epoch, loss) => {
+        // mostra solo ogni 10 epoche + ultima
+        if (epoch % 10 === 0 || epoch === 300) {
+          epochInfo.innerText = `Epoca ${epoch}/300 — loss: ${loss.toFixed(5)}`;
+        }
+        lastShown = epoch;
+      });
+
+      stTxt.innerText = 'Pronto';
+      epochInfo.innerText = '';
+      sendBtn.disabled = false;
+      msgInput.disabled = false;
+      msgInput.focus();
+
+      appendMessage('Chatbot pronto! Scrivi una parola del vocabolario e premi Invio.', 'bot');
+      console.log('Chatbot pronto!');
+    })();
+  </script>
+</body>
+</html>
