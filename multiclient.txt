@@ -1,0 +1,43 @@
+import socket
+import threading
+
+# Lista dei client connessi
+clients = []
+
+# Creo socket server
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(("127.0.0.1", 5000))
+server.listen(5)
+print("Server multiclient in ascolto...")
+
+while True:
+    # 1. Accetto nuovo client
+    conn, addr = server.accept()
+    
+    # 2. Aggiungo client alla lista se non c'è
+    if addr not in clients:
+        clients.append(addr)
+        print("Nuovo client:", addr)
+
+    # 3. Creo thread per gestire client separatamente
+    def thread_client(c, a):
+        while True:
+            try:
+                # Ricevo dati
+                data = c.recv(1024)
+                if not data:
+                    break
+                print(a, "dice:", data.decode())
+                
+                # Rispondo
+                c.send(b"OK")
+            except:
+                break
+
+        # Chiudo connessione e rimuovo dalla lista
+        c.close()
+        clients.remove(a)
+        print("Client disconnesso:", a)
+
+    # 4. Avvio thread
+    threading.Thread(target=thread_client, args=(conn, addr)).start()

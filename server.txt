@@ -1,0 +1,27 @@
+import socket
+
+# 1. Creo il socket del server
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# 2. Assegno IP e porta
+server.bind(("127.0.0.1", 5000))
+
+# 3. Metto il server in ascolto
+server.listen(1)  # 1 client alla volta
+print("Server in ascolto...")
+
+while True:
+    # 4. Accetto il client
+    conn, addr = server.accept()
+    print("Client connesso:", addr)
+
+    # 5. Ricevo dati
+    data = conn.recv(1024)
+    print("Ricevuto:", data.decode())
+
+    # 6. Rispondo al client
+    conn.send(b"OK")
+
+    # 7. Chiudo la connessione
+    conn.close()
+    print("Connessione chiusa\n")
