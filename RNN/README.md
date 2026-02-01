@@ -1,6 +1,3 @@
-Perfetto 👍
-Qui sotto trovi un README.md pronto per GitHub, scritto in italiano, ordinato, chiaro e adatto a un progetto formativo su AI / Reti Neurali (One-Hot, Feedforward, RNN).
-Puoi copiarlo e incollarlo direttamente nel file README.md.
 
 🤖 Intelligenza Artificiale – One Hot Encoding, Feedforward DNN e RNN
 
