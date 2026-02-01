@@ -11,7 +11,8 @@ def sigmoid_deriv_from_activation(a):
     return a * (1 - a)
 
 def softmax(x):
-    e_x = [math.exp(i) for i in x]
+    m = max(x)  # stabilità numerica
+    e_x = [math.exp(i - m) for i in x]
     somma = sum(e_x)
     return [i / somma for i in e_x]
 
@@ -86,15 +87,13 @@ W_out = [[random.uniform(0, 0.2) for _ in range(neuroni)] for _ in range(len(voc
 b_out = [random.uniform(0, 0.2) for _ in range(len(vocabolario))]
 
 # -----------------------------
-# Funzione RNN
+# Funzione RNN aggiornata
 # -----------------------------
 def RNN(Out_RNN, hidden_state):
-    nuovo_hidden = []
-    for n in range(neuroni):
-        somma = 0.0
-        for i in range(len(Out_RNN)):
-            somma += math.tanh(WT[n] * Out_RNN[i] + WH[n] * hidden_state[n] + bias_t[n])
-        nuovo_hidden.append(somma / len(Out_RNN))
+    nuovo_hidden = hidden_state[:]  # copia dello stato iniziale
+    for out in Out_RNN:             # aggiorniamo parola per parola
+        for n in range(neuroni):
+            nuovo_hidden[n] = math.tanh(WT[n] * out + WH[n] * nuovo_hidden[n] + bias_t[n])
     return nuovo_hidden
 
 # -----------------------------
