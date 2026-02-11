@@ -1,0 +1,12 @@
+// Esempio rapido di conteggio coppie in JS
+let parole = [["c", "a", "n", "e"], ["s", "t", "a"]];
+let conteggio = new Map();
+
+parole.forEach(p => {
+for (let i = 0; i < p.length - 1; i++) {
+let coppia = p[i] + "," + p[i+1]; // Usiamo una stringa come chiave
+conteggio.set(coppia, (conteggio.get(coppia) || 0) + 1);
+}
+});
+
+console.log(Object.fromEntries(conteggio));
