@@ -1,0 +1,44 @@
+import collections
+
+# Immaginiamo che questo sia il tuo database di addestramento
+testo_addestramento = "ciao gatto come stai gatto mangia"
+
+def crea_vocabolario_bpe(testo, num_merge):
+# 1. Partiamo dai singoli caratteri
+parole = testo.split()
+# Trasformiamo ogni parola in una lista di caratteri con il "muro" </w>
+vocab = [list(p) + ["</w>"] for p in parole]
+
+for _ in range(num_merge):
+coppie = collections.defaultdict(int)
+# 2. Lo "spiffero": contiamo le coppie
+for parola in vocab:
+for i in range(len(parola)-1):
+coppie[parola[i], parola[i+1]] += 1
+
+if not coppie: break
+
+# 3. Troviamo la coppia vincente
+vincente = max(coppie, key=coppie.get)
+
+# 4. Fondiamo la coppia in tutto il vocabolario
+nuovo_vocab = []
+for parola in vocab:
+nuova_p = []
+i = 0
+while i < len(parola):
+if i < len(parola)-1 and (parola[i], parola[i+1]) == vincente:
+nuova_p.append("".join(vincente))
+i += 2
+else:
+nuova_p.append(parola[i])
+i += 1
+nuovo_vocab.append(nuova_p)
+vocab = nuovo_vocab
+
+# Creiamo la mappa finale Parola/Pezzo -> ID
+token_unici = set(token for p in vocab for token in p)
+return {token: idx for idx, token in enumerate(token_unici)}
+
+# Creazione automatica!
+vocabolario = crea_vocabolario_bpe(testo_addestramento, 10)
