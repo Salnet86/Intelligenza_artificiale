@@ -1,0 +1,42 @@
+pip install tokenizers
+
+from tokenizers import ByteLevelBPETokenizer
+from transformers import PreTrainedTokenizerFast, AutoModel
+
+# 1. TRAINING: Creiamo il nostro tokenizer personalizzato
+# Ideale se hai un dataset di dominio specifico (es. documenti tecnici, elettronica)
+tokenizer_trainer = ByteLevelBPETokenizer()
+tokenizer_trainer.train(
+    files=["corpus.txt"], # Supponendo il file creato in precedenza
+    vocab_size=500,
+    min_frequency=2,
+    special_tokens=["<s>", "<pad>", "</s>", "<unk>", "<mask_token>"]
+)
+
+# Salviamo il tokenizer per riutilizzarlo
+tokenizer_trainer.save_model("mio_tokenizer_bpe")
+
+# 2. INFERENCE: Carichiamo il tokenizer addestrato
+# Utilizziamo la classe Fast di HuggingFace per massimizzare le performance
+tokenizer = PreTrainedTokenizerFast.from_pretrained("mio_tokenizer_bpe")
+
+# Codifica
+testo = "Il BPE è la base dell'architettura Transformer."
+encoded = tokenizer.encode(testo, return_tensors="pt")
+print(f"Token IDs: {encoded}")
+
+# Decodifica
+decoded = tokenizer.decode(encoded[0])
+print(f"Decodificato: {decoded}")
+
+# 3. INTEGRAZIONE: Esempio di utilizzo con un Transformer
+# Qui carichiamo un modello standard, ma potresti caricare il tuo
+# modello addestrato (es. AutoModel.from_pretrained("./mio_modello"))
+try:
+    model = AutoModel.from_pretrained("gpt2")
+    # Il modello ora usa il vocabolario del tokenizer per interpretare gli ID
+    output = model(encoded)
+    print("Modello eseguito con successo.")
+except Exception as e:
+    print(f"Errore durante l'integrazione: {e}")
+
