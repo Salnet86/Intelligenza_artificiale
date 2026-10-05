@@ -25,6 +25,9 @@ applica una funzione di attivazione.
 4. [Applicazioni Pratiche (NLP e Chatbot)](#3-applicazioni-pratiche-natural-language-processing-nlp-e-chatbot)
 
 ---
+pip install numpy
+pip install tensorflow
+
 
 ## 🧠 Introduzione
 L'Intelligenza Artificiale (IA) e il **Machine Learning (ML)** rappresentano il punto d'incontro tra la matematica statistica e l'informatica moderna, consentendo ai sistemi software di apprendere dai dati anziché essere programmati esclusivamente tramite regole rigide (*If-Then*).
